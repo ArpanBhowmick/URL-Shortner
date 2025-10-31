@@ -1,0 +1,26 @@
+{
+  "name": "url-shortner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon backend/server.js",
+     "client": "npm run dev --prefix frontend/url_shortner",
+     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArpanBhowmick/URL-Shortner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArpanBhowmick/URL-Shortner/issues"
+  },
+  "homepage": "https://github.com/ArpanBhowmick/URL-Shortner#readme",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

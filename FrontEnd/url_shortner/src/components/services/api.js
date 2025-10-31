@@ -2,7 +2,7 @@
 export const shortenUrl = async (longUrl, customSlug, expiryDays) => {
     try {
       //Send data to backend
-      const res = await fetch("http://localhost:5000/short", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/short`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({

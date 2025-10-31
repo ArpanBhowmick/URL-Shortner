@@ -25,7 +25,7 @@ export const shortUrl = async (req, res) => {
       return res.status(400).json({ message: "This slug is already taken!" });
     }
 
-    const shortUrl = `http://localhost:5000/${shortCode}`
+    const shortUrl = `${process.env.BASE_URL}/${shortCode}`;
 
     // calculate expiry days 
     let expireAt = null
