@@ -28,7 +28,7 @@ mongoose.connect(
 
 
 app.get("/", (req, res) => {
-  res.render("index.ejs", {shortUrl : null});
+  res.send("Backend is working fine!");
 });
 
 app.post("/short", shortUrl)
