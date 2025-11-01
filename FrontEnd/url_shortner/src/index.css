@@ -1,7 +1,10 @@
 @import "tailwindcss";
 
 
-
+body {
+  @apply text-gray-100 bg-black transition-colors duration-300;
+  font-family: "Poppins", sans-serif;
+}
 
 
 
@@ -57,7 +60,49 @@
 }
 
 /* Smooth fade for background transitions (optional aesthetic) */
-body {
-  @apply text-gray-100 bg-black transition-colors duration-300;
-  font-family: "Poppins", sans-serif;
+
+
+
+/* ===== Custom Scrollbar Styling ===== */
+
+/* For all scrollable elements */
+::-webkit-scrollbar {
+  width: 8px; /* scrollbar width */
 }
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 15, 25, 0.4); /* background track color */
+  border-radius: 8px;
+
+  
+   margin-block: 2px; /* keeps scrollbar thumb inside rounded corners */
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6366f1, #0ea5e9); /* indigo → cyan gradient */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #818cf8, #38bdf8); /* lighter on hover */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

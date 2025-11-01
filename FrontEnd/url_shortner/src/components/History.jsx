@@ -8,14 +8,42 @@ import "../index.css"; // import neon utilities
 import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 
+
 const History = ({ history, setHistory, previewUrl }) => {
   const [showQR, setShowQR] = useState(false);
   
 
-  const handleDelete = (index) => {
-    const updatedHistory = history.filter((_, i) => i !== index);
-    setHistory(updatedHistory);
-    toast.error("Deleted from history!");
+  const handleDelete = async (index, shortUrl) => {
+
+    try {
+      // extract shortCode from the URL (last part after slash)
+
+      const shortCode = shortUrl.split("/").pop();
+
+      // send delete request
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/${shortCode}`, {
+        method: "DELETE", 
+      });
+
+      //  if (!res.ok) {
+      // throw new Error("Failed to delete from server");
+      // }
+
+
+      // update local history 
+
+      const updatedHistory = history.filter((_, i) => i !== index);
+      setHistory(updatedHistory);
+      toast.error("Deleted from history!");
+
+
+    } catch (err) {
+      console.error( err);
+      toast.error("Could not delete from the server")
+    }
+
+    
   };
 
 
@@ -31,6 +59,9 @@ const History = ({ history, setHistory, previewUrl }) => {
           <div className="text-sm text-slate-400">Recent</div>
         </div>
 
+
+
+
         {/* History List Placeholder */}
 
         <div className="space-y-3 ">
@@ -38,7 +69,7 @@ const History = ({ history, setHistory, previewUrl }) => {
             history.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between gap-3 bg-black/20 border border-indigo-700/20 rounded-lg p-3 "
+                className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 bg-black/20 border border-indigo-700/20 rounded-lg p-3 "
               >
                 <div className="min-w-0">
                   {/* <a href="#" className="font-medium text-cyan-300 truncate">
@@ -61,7 +92,7 @@ const History = ({ history, setHistory, previewUrl }) => {
                     {item.longUrl}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 ">
                   {/* copy button  */}
 
                   <button
@@ -86,7 +117,7 @@ const History = ({ history, setHistory, previewUrl }) => {
                   {/* delete button  */}
 
                   <button
-                    onClick={() => handleDelete(index)}
+                    onClick={() => handleDelete(index, item.shortUrl)}
                     className="px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5"
                   >
                     Delete
@@ -113,7 +144,7 @@ const History = ({ history, setHistory, previewUrl }) => {
 
         {/* Preview Box */}
 
-        <div className="bg-black/30 border border-indigo-700/30 rounded-lg p-3  flex flex-col items-center justify-center gap-3 min-h-[190px]">
+        <div className="bg-black/30 border border-indigo-700/30 rounded-lg p-3  flex flex-col items-center justify-center gap-3 md:min-h-[190px] sm:min-h-[90px]">
           {previewUrl ? (
             showQR ? (
 

@@ -1,8 +1,15 @@
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+// only added this above code and this line  `${API_URL}/short`
+
 
 export const shortenUrl = async (longUrl, customSlug, expiryDays) => {
     try {
       //Send data to backend
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/short`, {
+
+      // const res = await fetch(`${import.meta.env.VITE_API_URL}/short`, {
+
+      const res = await fetch(`${API_URL}/short`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({
@@ -23,6 +30,8 @@ export const shortenUrl = async (longUrl, customSlug, expiryDays) => {
     }
     
 }
+
+
 
 
 

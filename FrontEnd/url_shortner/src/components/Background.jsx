@@ -1,16 +1,4 @@
-// const Background = ({ children }) => {
-//   return (
-//     <div className="min-h-screen grid place-items-center px-4 py-10 relative">
-//       {/* Neon grid background */}
-//       <div className="absolute inset-0 grid-bg" aria-hidden="true"></div>
 
-//       {/* Render all child components */}
-//       {children}
-//     </div>
-//   );
-// };
-
-// export default Background;
 
 
 
