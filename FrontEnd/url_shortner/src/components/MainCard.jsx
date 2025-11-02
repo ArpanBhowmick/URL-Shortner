@@ -194,9 +194,10 @@ const MainCard = () => {
                   Open
                 </button>
 
-                <button className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5">
+                {/* <button className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5">
                   QR
-                </button>
+                </button> */}
+                
               </div>
             </div>
           )}

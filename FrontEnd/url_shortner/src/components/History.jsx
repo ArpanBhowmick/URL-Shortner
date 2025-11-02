@@ -63,7 +63,7 @@ const History = ({ history, setHistory, previewUrl }) => {
           {history.length > 0 && (
             <button
               onClick={clearHistory}
-              className="font-semibold text-red-400  hover:text-red-300 transition-colors px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20"
+              className="font-semibold text-red-400  hover:text-red-500 transition-colors px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20"
             >
               Clear All
             </button>
@@ -105,7 +105,18 @@ const History = ({ history, setHistory, previewUrl }) => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2 ">
-                  {/* copy button  */}
+                  
+
+                  {/* open button  */}
+
+                  <button
+                    onClick={() => window.open(item.shortUrl, "_blank")}
+                    className="px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5"
+                  >
+                    Open
+                  </button>
+
+                    {/* copy button  */}
 
                   <button
                     onClick={() => {
@@ -117,14 +128,13 @@ const History = ({ history, setHistory, previewUrl }) => {
                     Copy
                   </button>
 
-                  {/* open button  */}
+                  {/* QR CODE button  */}
 
                   <button
-                    onClick={() => window.open(item.shortUrl, "_blank")}
-                    className="px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5"
-                  >
-                    Open
-                  </button>
+                   className="px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5">
+                  QR
+                </button>
+
 
                   {/* delete button  */}
 
