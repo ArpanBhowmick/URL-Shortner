@@ -5,7 +5,9 @@ const corsMiddleware = cors({
     "http://localhost:5173", 
     "https://url-shortner-two-phi.vercel.app"
   ],
-  methods: ["GET", "POST", "DELETE", "OPTIONS"] // optional
+  methods: ["GET", "POST", "DELETE", "OPTIONS"],
+  credentials: true,
+  optionsSuccessStatus: 200,
 });
 
 export default corsMiddleware;
