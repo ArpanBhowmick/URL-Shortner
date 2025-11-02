@@ -66,6 +66,13 @@ const MainCard = () => {
     setHistory(storedHistory);
   }, []);
 
+
+  useEffect(() => {
+  localStorage.setItem("shortedHistory", JSON.stringify(history));
+}, [history]);
+
+
+
   return (
     <>
       <section className="neon-card rounded-3xl p-6 enter show">

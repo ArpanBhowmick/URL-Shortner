@@ -38,8 +38,8 @@ app.post("/short", shortUrl)
 
 
 
-app.get("/:shortedCode", getOriginalUrl)
-app.delete("/:shortedCode", deleteUrl)
+app.get("/:shortedCode", getOriginalUrl);
+app.delete("/:shortedCode", deleteUrl);
 
 
 
