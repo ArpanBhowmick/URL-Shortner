@@ -1,5 +1,3 @@
-
-
 // src/components/History.jsx
 
 import toast from "react-hot-toast";
@@ -8,13 +6,10 @@ import "../index.css"; // import neon utilities
 import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 
-
 const History = ({ history, setHistory, previewUrl }) => {
   const [showQR, setShowQR] = useState(false);
-  
 
   const handleDelete = async (index, shortUrl) => {
-
     try {
       // extract shortCode from the URL (last part after slash)
 
@@ -23,43 +18,59 @@ const History = ({ history, setHistory, previewUrl }) => {
       // send delete request
 
       const res = await fetch(`${import.meta.env.VITE_API_URL}/${shortCode}`, {
-        method: "DELETE", 
+        method: "DELETE",
       });
 
       //  if (!res.ok) {
       // throw new Error("Failed to delete from server");
       // }
 
-
-      // update local history 
+      // update local history
 
       const updatedHistory = history.filter((_, i) => i !== index);
       setHistory(updatedHistory);
+
+      //  Update localStorage too
+
+      localStorage.setItem("shortedHistory", JSON.stringify(updatedHistory));
+
       toast.error("Deleted from history!");
-
-
     } catch (err) {
-      console.error( err);
-      toast.error("Could not delete from the server")
+      console.error(err);
+      toast.error("Could not delete from the server");
     }
-
-    
   };
 
-
-
+  const clearHistory = () => {
+    if (window.confirm("Are you sure you want to delete all URLs?")) {
+      localStorage.removeItem("shortedHistory");
+      setHistory([]);
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
       {/* ================= History Section ================= */}
       <aside className="md:col-span-2 neon-card p-4 rounded-2xl max-h-[337px] overflow-y-auto">
-
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold neon-accent">History</h3>
-          <div className="text-sm text-slate-400">Recent</div>
+
+          {/* show clear all button  */}
+
+
+            <div className="flex items-center gap-3">
+
+          {history.length > 0 && (
+            <button
+              onClick={clearHistory}
+              className="font-semibold text-red-400  hover:text-red-300 transition-colors px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20"
+            >
+              Clear All
+            </button>
+          )}
+          <h2 className="text-sm text-slate-400">Recent</h2>
         </div>
-
-
+</div>
 
 
         {/* History List Placeholder */}
@@ -71,7 +82,7 @@ const History = ({ history, setHistory, previewUrl }) => {
                 key={index}
                 className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 bg-black/20 border border-indigo-700/20 rounded-lg p-3 "
               >
-                <div className="min-w-0">
+                <div className="min-w-0 truncate">
                   {/* <a href="#" className="font-medium text-cyan-300 truncate">
                 —
               </a> */}
@@ -83,7 +94,8 @@ const History = ({ history, setHistory, previewUrl }) => {
                   <a
                     href={item.shortUrl}
                     target="_blank"
-                    className="font-medium text-cyan-300 truncate"
+                    rel="noopener noreferrer"
+                    className="font-medium text-cyan-300 truncate "
                   >
                     {item.shortUrl}
                   </a>
@@ -147,14 +159,12 @@ const History = ({ history, setHistory, previewUrl }) => {
         <div className="bg-black/30 border border-indigo-700/30 rounded-lg p-3  flex flex-col items-center justify-center gap-3 md:min-h-[190px] sm:min-h-[90px]">
           {previewUrl ? (
             showQR ? (
-
-               // CASE 1: Show QR
+              // CASE 1: Show QR
 
               <>
-
-              <div className="bg-transparent border border-indigo-700/20 p-7">
-                <QRCodeSVG value={previewUrl} size={128} />
-              </div>
+                <div className="bg-transparent border border-indigo-700/20 p-7">
+                  <QRCodeSVG value={previewUrl} size={128} />
+                </div>
                 <button
                   onClick={() => setShowQR(false)}
                   className="px-8 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
@@ -163,7 +173,6 @@ const History = ({ history, setHistory, previewUrl }) => {
                 </button>
               </>
             ) : (
-
               // CASE 2: Show short link text
 
               <>
@@ -179,14 +188,14 @@ const History = ({ history, setHistory, previewUrl }) => {
                 {/* QR toggle button  */}
 
                 <button
-                onClick={() => setShowQR(true)}
-                className="px-8 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5">
+                  onClick={() => setShowQR(true)}
+                  className="px-8 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
+                >
                   Show QR
                 </button>
               </>
             )
           ) : (
-
             // CASE 3: No preview yet
 
             <>
@@ -208,17 +217,20 @@ const History = ({ history, setHistory, previewUrl }) => {
         {/* Buttons */}
         {previewUrl && (
           <div className="mt-4 flex items-center justify-center gap-3">
-
-            <button 
-            onClick={() => {navigator.clipboard.writeText(previewUrl);
-                toast.success("Copied to clipboard!");}}
-            className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5">
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(previewUrl);
+                toast.success("Copied to clipboard!");
+              }}
+              className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
+            >
               Copy
             </button>
 
-            <button 
-            onClick={() => window.open(previewUrl, "_blank")}
-            className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5">
+            <button
+              onClick={() => window.open(previewUrl, "_blank")}
+              className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
+            >
               Open
             </button>
           </div>

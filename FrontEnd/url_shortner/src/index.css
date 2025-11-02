@@ -67,7 +67,8 @@ body {
 
 /* For all scrollable elements */
 ::-webkit-scrollbar {
-  width: 8px; /* scrollbar width */
+  width: 8px;
+  height: 6px; /* scrollbar width */
 }
 
 ::-webkit-scrollbar-track {

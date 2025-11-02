@@ -67,9 +67,9 @@ const MainCard = () => {
   }, []);
 
 
-  useEffect(() => {
-  localStorage.setItem("shortedHistory", JSON.stringify(history));
-}, [history]);
+//   useEffect(() => {
+//   localStorage.setItem("shortedHistory", JSON.stringify(history));
+// }, [history]);
 
 
 
