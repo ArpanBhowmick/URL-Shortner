@@ -66,7 +66,7 @@ export const deleteUrl = async (req, res) => {
 
          // Try deleting
 
-        const deletedUrl = await Url.findByIdAndDelete({shortCode});
+        const deletedUrl = await Url.findOneAndDelete({shortCode});
 
         if (!deletedUrl) {
             return res.status(404).json({message: "Url deleted succcessfully"})

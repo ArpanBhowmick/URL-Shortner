@@ -79,12 +79,12 @@ const MainCard = () => {
         {/* Header inside card */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold neon-accent">
+            <h2 className="text-xl font-bold ">
+              {/* text-violet-600 */}
               Shorten any link — instantly
             </h2>
             <p className="text-slate-400 mt-1 text-sm max-w-xl">
-              Paste your long URL and get a compact, shareable link. Includes
-              history, copy, QR, and demo generation for offline use.
+              Paste your long URL and get a compact, shareable link. complete with history, copy, and QR features.
             </p>
           </div>
         </div>
@@ -207,7 +207,8 @@ const MainCard = () => {
         history={history}
         setHistory={setHistory}
         previewUrl={shortUrl}
-        //  previewLongUrl={longUrl}
+        setPreviewUrl={setShortUrl}
+        
       />
     </>
   );

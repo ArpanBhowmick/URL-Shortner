@@ -7,10 +7,11 @@
 
 
 
-// src/components/Header.jsx
-// import React, { useState } from "react";
 
-import "../index.css"; // import neon utilities
+
+import { IoIosLink } from "react-icons/io";
+import { TiArrowRightOutline } from "react-icons/ti";
+
 
 const Header = () => {
 
@@ -19,45 +20,25 @@ const Header = () => {
       {/* Left: Logo + Title */}
       <div className="flex items-center gap-4">
         {/* Neon logo box */}
-        <div className="w-16 h-16 neon-card flex items-center justify-center rounded-xl">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-7 w-7 text-cyan-300"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.6"
-              d="M3 12h18M12 3v18"
-            />
-          </svg>
+        <div className="relative w-16 h-16 neon-card flex items-center justify-center rounded-xl ">
+
+          
+
+          <IoIosLink className="absolute right-[39%] rotate-[-15deg] h-7 w-7 text-cyan-300 drop-shadow-[0_0_4px_#06b6d4]"/>
+          <TiArrowRightOutline className="absolute right-[-1%] text-violet-400 h-7 w-7 opacity-90 drop-shadow-[0_0_4px_#3b82f6]" />
+
         </div>
 
         {/* Title + Subtitle */}
         <div>
           <h1 className="text-3xl font-extrabold neon-text">URL Shortener</h1>
           <p className="text-slate-400 text-sm">
-            Futuristic URL shortener — resume-ready demo with neon UI & interactive UX
+            Futuristic URL shortener — Transforming long links into a seamless digital experience.
           </p>
         </div>
       </div>
 
-      {/* Right: Toggle button + Credit link */}
-
-      {/* <div className="flex items-center gap-3">
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-lg btn-outline-neon hover:scale-105 transition-transform text-sm"
-        >
-          {isLight ? "Toggle Neon" : "Toggle Light"}
-        </button>
-        <a href="#footer" className="text-sm text-slate-400 hover:text-cyan-300">
-          Built by Hexagon
-        </a>
-      </div> */}
+      
     </header>
   );
 };

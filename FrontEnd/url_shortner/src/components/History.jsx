@@ -1,12 +1,14 @@
-// src/components/History.jsx
-
 import toast from "react-hot-toast";
-import "../index.css"; // import neon utilities
+
 
 import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import {  FaShareNodes } from "react-icons/fa6";
+import { IoIosCopy } from "react-icons/io";
+import { MdDeleteOutline, MdOutlineQrCodeScanner } from "react-icons/md";
+import { motion } from "framer-motion";
 
-const History = ({ history, setHistory, previewUrl }) => {
+const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
   const [showQR, setShowQR] = useState(false);
 
   const handleDelete = async (index, shortUrl) => {
@@ -48,30 +50,56 @@ const History = ({ history, setHistory, previewUrl }) => {
     }
   };
 
+
+// React will interpret item.shortUrl as a destructuring expression, not a parameter name.
+// It should instead accept a normal variable name, like "url"
+
+  const handleShare = async (url) => {
+    if(navigator.share) {
+      try {
+        await navigator.share({
+          title: "Check this out!",
+        text: "I shortened this link using HexaURL:",
+        url,
+        });
+        toast.success("Shared successfully!");
+      } catch (err) {
+        console.error("Share cancelled or failed:", err);
+        toast.error("Share cancelled or failed.");
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      toast("Copied to clipboard (sharing not supported)");
+    }
+  }
+
+
+
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
       {/* ================= History Section ================= */}
       <aside className="md:col-span-2 neon-card p-4 rounded-2xl max-h-[337px] overflow-y-auto">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold neon-accent">History</h3>
+          <h3 className="text-lg font-semibold ">
+            {/* text-violet-600 */}
+            History
+          </h3>
 
           {/* show clear all button  */}
 
-
-            <div className="flex items-center gap-3">
-
-          {history.length > 0 && (
-            <button
-              onClick={clearHistory}
-              className="font-semibold text-red-400  hover:text-red-500 transition-colors px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20"
-            >
-              Clear All
-            </button>
-          )}
-          <h2 className="text-sm text-slate-400">Recent</h2>
+          <div className="flex items-center gap-3">
+            {history.length > 0 && (
+              <button
+                onClick={clearHistory}
+                className="font-semibold text-sm text-red-600  hover:text-red-600 transition-colors px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20"
+              >
+                Clear All
+              </button>
+            )}
+            <h2 className="text-sm text-slate-400">Recent</h2>
+          </div>
         </div>
-</div>
-
 
         {/* History List Placeholder */}
 
@@ -104,45 +132,79 @@ const History = ({ history, setHistory, previewUrl }) => {
                     {item.longUrl}
                   </p>
                 </div>
+
+
                 <div className="flex items-center gap-2 ">
-                  
+
 
                   {/* open button  */}
 
                   <button
                     onClick={() => window.open(item.shortUrl, "_blank")}
-                    className="px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5"
+                    className="px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5 cursor-pointer text-emerald-500 hover:text-emerald-300"
                   >
                     Open
                   </button>
 
-                    {/* copy button  */}
+                  {/* copy button  */}
 
-                  <button
+                  <motion.button
                     onClick={() => {
                       navigator.clipboard.writeText(item.shortUrl);
                       toast.success("Copied to clipboard!");
                     }}
-                    className="px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5"
+                    className="relative flex items-center justify-center px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5 transition-all duration-200 group cursor-pointer "
                   >
-                    Copy
+                    <span className="transition-opacity duration-200 group-hover:opacity-0 text-slate-300">
+                      Copy
+                      </span>
+                    
+                    <IoIosCopy className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-slate-400"/>
+
+                  </motion.button>
+
+                  {/* share button */}
+
+                  <button 
+                  onClick={() => handleShare(item.shortUrl)}
+                  className="relative flex items-center justify-center px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5 transition-all duration-200 group cursor-pointer">
+                    
+                    <span className="transition-opacity duration-200 group-hover:opacity-0 text-sky-400">
+                      Share
+                      </span>
+                    <FaShareNodes className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-sky-500" />
+
+                    
                   </button>
 
                   {/* QR CODE button  */}
 
                   <button
-                   className="px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5">
-                  QR
-                </button>
+                    onClick={() => {
+                      setPreviewUrl(item.shortUrl);
+                      setShowQR(true);
+                    }}
+                    className="relative flex items-center justify-center px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5 transition-all duration-200 group cursor-pointer"
+                  >
 
+                    <span className="transition-opacity duration-200 group-hover:opacity-0 text-violet-500 ">
+                      QR
+                    </span>
+                    
+                    <MdOutlineQrCodeScanner className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-violet-400"/>
+                  </button>
 
                   {/* delete button  */}
 
                   <button
                     onClick={() => handleDelete(index, item.shortUrl)}
-                    className="px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5"
+                    className="relative flex items-center justify-center px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5 transition-all duration-200 group cursor-pointer"
                   >
-                    Delete
+                    <span className="transition-opacity duration-200 group-hover:opacity-0 text-red-500 ">
+                      Delete
+                    </span>
+                    
+                    <MdDeleteOutline className="absolute opacity-0  group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-red-700"/>
                   </button>
                 </div>
               </div>
@@ -158,7 +220,11 @@ const History = ({ history, setHistory, previewUrl }) => {
       {/* ================= Live Preview / QR Section ================= */}
       <aside className="neon-card p-4 rounded-2xl ">
         <div className="mb-3">
-          <h4 className="text-sm neon-accent font-medium">Live Preview</h4>
+          <h4 className="text-sm font-semibold  ">
+            {/* text-violet-600 */}
+            Live Preview
+          </h4>
+
           <p className="text-xs text-slate-400 mt-1">
             Click shorten to preview link and generate QR.
           </p>
