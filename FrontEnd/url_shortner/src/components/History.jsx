@@ -69,7 +69,7 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
       }
     } else {
       navigator.clipboard.writeText(url);
-      toast("Copied to clipboard (sharing not supported)");
+      toast.success("Copied to clipboard (sharing not supported)");
     }
   }
 
@@ -111,13 +111,7 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
                 className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 bg-black/20 border border-indigo-700/20 rounded-lg p-3 "
               >
                 <div className="min-w-0 truncate">
-                  {/* <a href="#" className="font-medium text-cyan-300 truncate">
-                —
-              </a> */}
-
-                  {/* <p className="text-xs text-slate-400 truncate mt-1">
-                    Original URL will appear here
-                  </p> */}
+                  
 
                   <a
                     href={item.shortUrl}
@@ -281,13 +275,7 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
             </>
           )}
 
-          {/* <div className="text-cyan-300 font-semibold break-all">
-            —
-          </div> */}
-
-          {/* <div className="text-xs text-slate-400 mt-1">
-            Original URL will appear here
-          </div> */}
+          
         </div>
 
         {/* Buttons */}

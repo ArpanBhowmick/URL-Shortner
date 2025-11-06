@@ -20,12 +20,12 @@ const Header = () => {
       {/* Left: Logo + Title */}
       <div className="flex items-center gap-4">
         {/* Neon logo box */}
-        <div className="relative w-16 h-16 neon-card flex items-center justify-center rounded-xl ">
+        <div className="relative w-16 h-16 neon-card flex items-center justify-center rounded-xl p-4">
 
           
 
-          <IoIosLink className="absolute right-[39%] rotate-[-15deg] h-7 w-7 text-cyan-300 drop-shadow-[0_0_4px_#06b6d4]"/>
-          <TiArrowRightOutline className="absolute right-[-1%] text-violet-400 h-7 w-7 opacity-90 drop-shadow-[0_0_4px_#3b82f6]" />
+          <IoIosLink className="absolute right-[45%] rotate-[-15deg] h-7 w-7 text-cyan-300 drop-shadow-[0_0_4px_#06b6d4] "/>
+          <TiArrowRightOutline className="absolute right-[7%] text-violet-400 h-7 w-7 opacity-90 drop-shadow-[0_0_4px_#3b82f6] " />
 
         </div>
 

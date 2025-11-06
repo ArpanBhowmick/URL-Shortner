@@ -1,6 +1,9 @@
 import Url from "../Models/Url.js";
 import shortid from "shortid";
 
+
+//  Create a shortened URL
+
 export const shortUrl = async (req, res) => {
   try {
     let { longUrl, customSlug, expiryDays } = req.body;
@@ -17,11 +20,11 @@ export const shortUrl = async (req, res) => {
     // Check if the slug already exists
 
     const existing = await Url.findOne({ shortCode });
-
     if (existing) {
       return res.status(400).json({ message: "This slug is already taken!" });
     }
 
+   // Construct full short URL
     const shortUrl = `${process.env.BASE_URL}/${shortCode}`;
 
     // calculate expiry days
@@ -48,7 +51,7 @@ export const shortUrl = async (req, res) => {
     console.log("shorturl saved = ", newUrl);
 
     return res.status(201).json({ shortUrl });
-    // res.json({shortUrl})
+    
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -57,7 +60,7 @@ export const shortUrl = async (req, res) => {
 
 
 
-
+//  Delete a shortened URL by its code
 
 export const deleteUrl = async (req, res) => {
 
@@ -69,7 +72,7 @@ export const deleteUrl = async (req, res) => {
         const deletedUrl = await Url.findOneAndDelete({shortCode});
 
         if (!deletedUrl) {
-            return res.status(404).json({message: "Url deleted succcessfully"})
+            return res.status(200).json({message: "Url deleted succcessfully"})
         }
 
         console.log("Deleted:", deletedUrl);
@@ -81,6 +84,7 @@ export const deleteUrl = async (req, res) => {
 }
 
 
+// Redirect to original URL
 
 export const getOriginalUrl = async (req, res) => {
   const shortCode = req.params.shortedCode;

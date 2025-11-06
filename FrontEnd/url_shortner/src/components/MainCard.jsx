@@ -1,7 +1,7 @@
-// src/components/MainCard.jsx
+
 
 import { useEffect, useState } from "react";
-import "../index.css"; // import neon utilities
+
 import { toast } from "react-hot-toast";
 import History from "./History";
 import { shortenUrl } from "./services/api";
@@ -50,6 +50,7 @@ const MainCard = () => {
       localStorage.setItem("shortedHistory", JSON.stringify(updatedHistory));
     } catch (err) {
       console.error(err);
+      toast.error("Failed to shorten URL. Please try again.");
     }
   };
 
