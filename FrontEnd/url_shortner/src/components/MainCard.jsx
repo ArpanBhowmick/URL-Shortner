@@ -143,7 +143,7 @@ const MainCard = () => {
             <button
               type="button"
               onClick={handleClear}
-              className="ml-2 px-3 py-2 rounded-lg text-sm border border-purple-400/30 hover:bg-white/5  "
+              className="ml-2 px-3 py-2 rounded-lg text-sm border border-purple-400/30 hover:bg-white/5 cursor-pointer "
             >
               Clear
             </button>
@@ -181,7 +181,7 @@ const MainCard = () => {
                     navigator.clipboard.writeText(shortUrl);
                     toast.success("Copied to clipboad!");
                   }}
-                  className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
+                  className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5 cursor-pointer"
                 >
                   Copy
                 </button>
@@ -190,7 +190,7 @@ const MainCard = () => {
 
                 <button
                   onClick={() => window.open(shortUrl, "_blank")}
-                  className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
+                  className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5 cursor-pointer"
                 >
                   Open
                 </button>

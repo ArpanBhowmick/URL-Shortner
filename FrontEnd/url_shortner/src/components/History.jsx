@@ -92,7 +92,7 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
             {history.length > 0 && (
               <button
                 onClick={clearHistory}
-                className="font-semibold text-sm text-red-600  hover:text-red-600 transition-colors px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20"
+                className="font-semibold text-sm text-red-600  hover:text-red-600 transition-colors px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 cursor-pointer"
               >
                 Clear All
               </button>
@@ -237,7 +237,7 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
                 </div>
                 <button
                   onClick={() => setShowQR(false)}
-                  className="px-8 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
+                  className="px-8 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5 cursor-pointer"
                 >
                   Hide QR
                 </button>
@@ -259,7 +259,7 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
 
                 <button
                   onClick={() => setShowQR(true)}
-                  className="px-8 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
+                  className="px-8 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5 cursor-pointer"
                 >
                   Show QR
                 </button>
@@ -286,14 +286,14 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
                 navigator.clipboard.writeText(previewUrl);
                 toast.success("Copied to clipboard!");
               }}
-              className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
+              className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5 cursor-pointer"
             >
               Copy
             </button>
 
             <button
               onClick={() => window.open(previewUrl, "_blank")}
-              className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5"
+              className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5 cursor-pointer"
             >
               Open
             </button>
