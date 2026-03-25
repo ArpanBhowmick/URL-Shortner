@@ -2,7 +2,13 @@ import Url from "../Models/Url.js";
 import shortid from "shortid";
 
 
-//  Create a shortened URL
+
+
+
+
+
+
+//  ========================== Create a shortened URL ==================================
 
 export const shortUrl = async (req, res) => {
   try {
@@ -24,7 +30,7 @@ export const shortUrl = async (req, res) => {
       return res.status(400).json({ message: "This slug is already taken!" });
     }
 
-   // Construct full short URL
+    // Construct full short URL
     const shortUrl = `${process.env.BASE_URL}/${shortCode}`;
 
     // calculate expiry days
@@ -51,7 +57,6 @@ export const shortUrl = async (req, res) => {
     console.log("shorturl saved = ", newUrl);
 
     return res.status(201).json({ shortUrl });
-    
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -60,42 +65,70 @@ export const shortUrl = async (req, res) => {
 
 
 
-//  Delete a shortened URL by its code
+
+
+
+
+
+
+// =============================== Delete a shortened URL by its code =============================
 
 export const deleteUrl = async (req, res) => {
+  try {
+    const { shortCode } = req.params;
 
-    try {
-        const { shortCode } = req.params;
+    // Try deleting
 
-         // Try deleting
+    const deletedUrl = await Url.findOneAndDelete({ shortCode });
 
-        const deletedUrl = await Url.findOneAndDelete({shortCode});
-
-        if (!deletedUrl) {
-            return res.status(200).json({message: "Url deleted succcessfully"})
-        }
-
-        console.log("Deleted:", deletedUrl);
-
-    } catch (err) {
-        console.error(err)
-        res.status(500).json({ message: "Server error" });
+    if (!deletedUrl) {
+      return res.status(404).json({ message: "URL not found" });
     }
-}
+    console.log("Deleted:", deletedUrl);
+    return res.status(200).json({ message: "URL deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 
-// Redirect to original URL
+
+
+
+
+
+
+
+// ====================== Redirect to original URL ===============================
 
 export const getOriginalUrl = async (req, res) => {
-  const shortCode = req.params.shortedCode;
+  try {
+    const shortCode = req.params.shortCode;
 
-  // find on DB
+    // find on DB
+    const originalUrl = await Url.findOne({ shortCode });
 
-  const originalUrl = await Url.findOne({ shortCode });
-  if (originalUrl) {
-    res.redirect(originalUrl.longUrl);
-  } else {
-    res.status(404).json({ message: "Invalid shortcode" });
+    // if (originalUrl) {
+    //   res.redirect(originalUrl.longUrl);
+    // } else {
+    //   res.status(404).json({ message: "Invalid shortcode" });
+    // }
+
+    if (originalUrl) {
+      if (!originalUrl) {
+        return res.status(404).json({ message: "Invalid shortcode" });
+      }
+
+      if (originalUrl.expireAt && originalUrl.expireAt < new Date()) {
+        return res.status(410).json({ message: "Link expired" });
+      }
+
+      return res.redirect(originalUrl.longUrl);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
