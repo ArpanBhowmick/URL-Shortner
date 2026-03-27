@@ -17,7 +17,8 @@ const urlSchema = new mongoose.Schema({
   expireAt: {
     type: Date,
     default: null,
-    expires: 0,  // tells MongoDB to delete the document automatically
+    index: { expires: 'expireAt' }
+    // tells MongoDB to delete the document automatically
   },
   // 'expires: 0' means — once the current time passes 'expireAt', delete it immediately ,t’s a special MongoDB feature, called a TTL (Time-To-Live) index.Hey MongoDB, please make a TTL index on the expireAt field.
 // As soon as the current time passes the value in expireAt, remove this document.

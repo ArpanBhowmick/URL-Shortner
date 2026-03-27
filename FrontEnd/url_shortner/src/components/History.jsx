@@ -1,9 +1,8 @@
 import toast from "react-hot-toast";
 
-
 import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import {  FaShareNodes } from "react-icons/fa6";
+import { FaShareNodes } from "react-icons/fa6";
 import { IoIosCopy } from "react-icons/io";
 import { MdDeleteOutline, MdOutlineQrCodeScanner } from "react-icons/md";
 import { motion } from "framer-motion";
@@ -12,37 +11,62 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
   const [showQR, setShowQR] = useState(false);
 
   const handleDelete = async (index, shortUrl) => {
-    try {
-      // extract shortCode from the URL (last part after slash)
+  let shortCode;
 
-      const shortCode = shortUrl.split("/").pop();
+  try {
+    shortCode = new URL(shortUrl).pathname.split("/").filter(Boolean).pop();
+  } catch {
+    toast.error("Invalid URL");
+    return;
+  }
 
-      // send delete request
+  console.log("ShortCode:", shortCode);
+  console.log("API URL:", import.meta.env.VITE_API_URL);
+  console.log(
+    "Delete URL:",
+    `${import.meta.env.VITE_API_URL}/delete/${shortCode}`
+  );
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/${shortCode}`, {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/delete/${shortCode}`,
+      {
         method: "DELETE",
-      });
+      }
+    );
 
-      //  if (!res.ok) {
-      // throw new Error("Failed to delete from server");
-      // }
+    if (!res.ok) {
+      const data = await res.json();
 
-      // update local history
+      if (res.status === 404) {
+        toast.success("Already deleted / expired");
+
+        const updatedHistory = history.filter((_, i) => i !== index);
+        setHistory(updatedHistory);
+        localStorage.setItem(
+          "shortedHistory",
+          JSON.stringify(updatedHistory)
+        );
+      } else {
+        toast.error(data.message || "Delete failed");
+      }
+    } else {
+      toast.success("Deleted successfully!");
 
       const updatedHistory = history.filter((_, i) => i !== index);
       setHistory(updatedHistory);
-
-      //  Update localStorage too
-
-      localStorage.setItem("shortedHistory", JSON.stringify(updatedHistory));
-
-      toast.error("Deleted from history!");
-    } catch (err) {
-      console.error(err);
-      toast.error("Could not delete from the server");
+      localStorage.setItem(
+        "shortedHistory",
+        JSON.stringify(updatedHistory)
+      );
     }
-  };
+  } catch (err) {
+    console.error("Delete error:", err);
+    toast.error(err.message || "Could not delete from the server");
+  }
+};
 
+  // clear histry button handler
   const clearHistory = () => {
     if (window.confirm("Are you sure you want to delete all URLs?")) {
       localStorage.removeItem("shortedHistory");
@@ -50,17 +74,15 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
     }
   };
 
-
-// React will interpret item.shortUrl as a destructuring expression, not a parameter name.
-// It should instead accept a normal variable name, like "url"
-
+  
+  // share handler
   const handleShare = async (url) => {
-    if(navigator.share) {
+    if (navigator.share) {
       try {
         await navigator.share({
           title: "Check this out!",
-        text: "I shortened this link using HexaURL:",
-        url,
+          text: "I shortened this link using HexaURL:",
+          url,
         });
         toast.success("Shared successfully!");
       } catch (err) {
@@ -71,10 +93,7 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
       navigator.clipboard.writeText(url);
       toast.success("Copied to clipboard (sharing not supported)");
     }
-  }
-
-
-
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -111,8 +130,6 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
                 className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 bg-black/20 border border-indigo-700/20 rounded-lg p-3 "
               >
                 <div className="min-w-0 truncate">
-                  
-
                   <a
                     href={item.shortUrl}
                     target="_blank"
@@ -127,10 +144,7 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
                   </p>
                 </div>
 
-
                 <div className="flex items-center gap-2 ">
-
-
                   {/* open button  */}
 
                   <button
@@ -151,24 +165,21 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
                   >
                     <span className="transition-opacity duration-200 group-hover:opacity-0 text-slate-300">
                       Copy
-                      </span>
-                    
-                    <IoIosCopy className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-slate-400"/>
+                    </span>
 
+                    <IoIosCopy className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-slate-400" />
                   </motion.button>
 
                   {/* share button */}
 
-                  <button 
-                  onClick={() => handleShare(item.shortUrl)}
-                  className="relative flex items-center justify-center px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5 transition-all duration-200 group cursor-pointer">
-                    
+                  <button
+                    onClick={() => handleShare(item.shortUrl)}
+                    className="relative flex items-center justify-center px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5 transition-all duration-200 group cursor-pointer"
+                  >
                     <span className="transition-opacity duration-200 group-hover:opacity-0 text-sky-400">
                       Share
-                      </span>
+                    </span>
                     <FaShareNodes className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-sky-500" />
-
-                    
                   </button>
 
                   {/* QR CODE button  */}
@@ -180,12 +191,11 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
                     }}
                     className="relative flex items-center justify-center px-2 py-1 rounded bg-transparent border border-indigo-700/20 text-sm hover:bg-white/5 transition-all duration-200 group cursor-pointer"
                   >
-
                     <span className="transition-opacity duration-200 group-hover:opacity-0 text-violet-500 ">
                       QR
                     </span>
-                    
-                    <MdOutlineQrCodeScanner className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-violet-400"/>
+
+                    <MdOutlineQrCodeScanner className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-violet-400" />
                   </button>
 
                   {/* delete button  */}
@@ -197,8 +207,8 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
                     <span className="transition-opacity duration-200 group-hover:opacity-0 text-red-500 ">
                       Delete
                     </span>
-                    
-                    <MdDeleteOutline className="absolute opacity-0  group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-red-700"/>
+
+                    <MdDeleteOutline className="absolute opacity-0  group-hover:opacity-100 transition-opacity duration-200 text-base hover:text-red-700" />
                   </button>
                 </div>
               </div>
@@ -274,8 +284,6 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
               </p>
             </>
           )}
-
-          
         </div>
 
         {/* Buttons */}

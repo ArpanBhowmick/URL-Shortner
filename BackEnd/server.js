@@ -42,7 +42,7 @@ app.post("/short", shortUrl);
 //  So this: // fetch("http://localhost:5000/make", { method: "POST", ... });  will call: app.post("/make", shortUrl);
 
 app.get("/:shortCode", getOriginalUrl);
-app.delete("/:shortCode", deleteUrl);
+app.delete("/delete/:shortCode", deleteUrl);
 
 // Why?:
 // Loads your environment variables.

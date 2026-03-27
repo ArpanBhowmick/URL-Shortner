@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 
 import { toast } from "react-hot-toast";
@@ -12,6 +10,7 @@ const MainCard = () => {
   const [customSlug, setCustomSlug] = useState("");
   const [expiryDays, setExpiryDays] = useState("");
   const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +20,7 @@ const MainCard = () => {
       return;
     }
 
-    
+    setLoading(true);
 
     try {
       const data = await shortenUrl(longUrl, customSlug, expiryDays);
@@ -51,6 +50,8 @@ const MainCard = () => {
     } catch (err) {
       console.error(err);
       toast.error("Failed to shorten URL. Please try again.");
+    } finally {
+      setLoading(false); // ✅ STOP loading (VERY IMPORTANT)
     }
   };
 
@@ -67,12 +68,9 @@ const MainCard = () => {
     setHistory(storedHistory);
   }, []);
 
-
-//   useEffect(() => {
-//   localStorage.setItem("shortedHistory", JSON.stringify(history));
-// }, [history]);
-
-
+  //   useEffect(() => {
+  //   localStorage.setItem("shortedHistory", JSON.stringify(history));
+  // }, [history]);
 
   return (
     <>
@@ -85,7 +83,8 @@ const MainCard = () => {
               Shorten any link — instantly
             </h2>
             <p className="text-slate-400 mt-1 text-sm max-w-xl">
-              Paste your long URL and get a compact, shareable link. complete with history, copy, and QR features.
+              Paste your long URL and get a compact, shareable link. complete
+              with history, copy, and QR features.
             </p>
           </div>
         </div>
@@ -133,11 +132,13 @@ const MainCard = () => {
 
             <button
               type="submit"
-              className="ml-auto  text-black font-semibold rounded-lg px-5 py-2 bg-gradient-to-r from-cyan-300 to-blue-600 
+              disabled={loading}
+              className={`ml-auto  text-black font-semibold rounded-lg px-5 py-2 bg-gradient-to-r from-cyan-300 to-blue-600 
             hover:from-green-700 hover:to-green-700 hover:text-white transition-all duration-300 cursor-pointer
-            "
+            ${loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+            `}
             >
-              Shorten
+              {loading ? "Shortening..." : "Shorten"}
             </button>
 
             <button
@@ -198,7 +199,6 @@ const MainCard = () => {
                 {/* <button className="px-3 py-2 rounded-lg bg-transparent border border-indigo-700/20 hover:bg-white/5">
                   QR
                 </button> */}
-                
               </div>
             </div>
           )}
@@ -209,7 +209,6 @@ const MainCard = () => {
         setHistory={setHistory}
         previewUrl={shortUrl}
         setPreviewUrl={setShortUrl}
-        
       />
     </>
   );

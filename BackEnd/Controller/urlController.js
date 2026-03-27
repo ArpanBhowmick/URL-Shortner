@@ -1,13 +1,6 @@
 import Url from "../Models/Url.js";
 import shortid from "shortid";
 
-
-
-
-
-
-
-
 //  ========================== Create a shortened URL ==================================
 
 export const shortUrl = async (req, res) => {
@@ -50,10 +43,11 @@ export const shortUrl = async (req, res) => {
       longUrl,
       expireAt,
     });
+    
     //creates a record that stores both the random short code and the original long URL together.
     //shortCode acts like a button to finds the longUrl in the same record and “calls it
 
-    await newUrl.save(); //saves this record in MongoDB.
+    await newUrl.save(); 
     console.log("shorturl saved = ", newUrl);
 
     return res.status(201).json({ shortUrl });
@@ -62,14 +56,6 @@ export const shortUrl = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-
-
-
-
-
-
-
 
 // =============================== Delete a shortened URL by its code =============================
 
@@ -92,14 +78,6 @@ export const deleteUrl = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
 // ====================== Redirect to original URL ===============================
 
 export const getOriginalUrl = async (req, res) => {
@@ -115,17 +93,14 @@ export const getOriginalUrl = async (req, res) => {
     //   res.status(404).json({ message: "Invalid shortcode" });
     // }
 
-    if (originalUrl) {
-      if (!originalUrl) {
-        return res.status(404).json({ message: "Invalid shortcode" });
-      }
-
-      if (originalUrl.expireAt && originalUrl.expireAt < new Date()) {
-        return res.status(410).json({ message: "Link expired" });
-      }
-
-      return res.redirect(originalUrl.longUrl);
+    if (!originalUrl) {
+      return res.status(404).json({ message: "Invalid shortcode" });
     }
+    if (originalUrl.expireAt && originalUrl.expireAt < new Date()) {
+      return res.status(410).json({ message: "Link expired" });
+    }
+    return res.redirect(originalUrl.longUrl);
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
