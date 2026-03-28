@@ -30,5 +30,6 @@ export const shortenUrl = async (longUrl, customSlug, expiryDays) => {
     //   setShortUrl(data.shortUrl);
   } catch (err) {
     console.error(err);
+     throw err;
   }
 };

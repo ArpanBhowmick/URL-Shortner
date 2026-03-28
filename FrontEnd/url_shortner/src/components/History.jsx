@@ -11,60 +11,51 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
   const [showQR, setShowQR] = useState(false);
 
   const handleDelete = async (index, shortUrl) => {
-  let shortCode;
+    let shortCode;
 
-  try {
-    shortCode = new URL(shortUrl).pathname.split("/").filter(Boolean).pop();
-  } catch {
-    toast.error("Invalid URL");
-    return;
-  }
+    try {
+      shortCode = new URL(shortUrl).pathname.split("/").filter(Boolean).pop();
+    } catch {
+      toast.error("Invalid URL");
+      return;
+    }
 
-  console.log("ShortCode:", shortCode);
-  console.log("API URL:", import.meta.env.VITE_API_URL);
-  console.log(
-    "Delete URL:",
-    `${import.meta.env.VITE_API_URL}/delete/${shortCode}`
-  );
-
-  try {
-    const res = await fetch(
+    console.log("ShortCode:", shortCode);
+    console.log("API URL:", import.meta.env.VITE_API_URL);
+    console.log(
+      "Delete URL:",
       `${import.meta.env.VITE_API_URL}/delete/${shortCode}`,
-      {
-        method: "DELETE",
-      }
     );
 
-    if (!res.ok) {
-      const data = await res.json();
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/delete/${shortCode}`,
+        {
+          method: "DELETE",
+        },
+      );
 
-      if (res.status === 404) {
-        toast.success("Already deleted / expired");
+      if (!res.ok) {
+        const data = await res.json();
 
-        const updatedHistory = history.filter((_, i) => i !== index);
-        setHistory(updatedHistory);
-        localStorage.setItem(
-          "shortedHistory",
-          JSON.stringify(updatedHistory)
-        );
+        if (res.status === 404) {
+          toast.success("Already deleted / expired");
+        } else {
+          toast.error(data.message || "Delete failed");
+        }
       } else {
-        toast.error(data.message || "Delete failed");
+        toast.success("Deleted successfully!");
       }
-    } else {
-      toast.success("Deleted successfully!");
 
       const updatedHistory = history.filter((_, i) => i !== index);
       setHistory(updatedHistory);
-      localStorage.setItem(
-        "shortedHistory",
-        JSON.stringify(updatedHistory)
-      );
+      localStorage.setItem("shortedHistory", JSON.stringify(updatedHistory));
+      
+    } catch (err) {
+      console.error("Delete error:", err);
+      toast.error(err.message || "Could not delete from the server");
     }
-  } catch (err) {
-    console.error("Delete error:", err);
-    toast.error(err.message || "Could not delete from the server");
-  }
-};
+  };
 
   // clear histry button handler
   const clearHistory = () => {
@@ -74,7 +65,6 @@ const History = ({ history, setHistory, previewUrl, setPreviewUrl }) => {
     }
   };
 
-  
   // share handler
   const handleShare = async (url) => {
     if (navigator.share) {

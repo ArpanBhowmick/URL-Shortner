@@ -1,6 +1,10 @@
 import Url from "../Models/Url.js";
 import shortid from "shortid";
 
+
+
+
+
 //  ========================== Create a shortened URL ==================================
 
 export const shortUrl = async (req, res) => {
@@ -13,11 +17,9 @@ export const shortUrl = async (req, res) => {
     if (!longUrl) return res.status(400).json({ message: "URL required" });
 
     // If user gave a custom slug, use it — otherwise generate one
-
     const shortCode = customSlug ? customSlug.trim() : shortid.generate();
 
     // Check if the slug already exists
-
     const existing = await Url.findOne({ shortCode });
     if (existing) {
       return res.status(400).json({ message: "This slug is already taken!" });
@@ -46,7 +48,6 @@ export const shortUrl = async (req, res) => {
     
     //creates a record that stores both the random short code and the original long URL together.
     //shortCode acts like a button to finds the longUrl in the same record and “calls it
-
     await newUrl.save(); 
     console.log("shorturl saved = ", newUrl);
 
@@ -57,16 +58,20 @@ export const shortUrl = async (req, res) => {
   }
 };
 
+
+
+
+
 // =============================== Delete a shortened URL by its code =============================
 
 export const deleteUrl = async (req, res) => {
   try {
     const { shortCode } = req.params;
 
-    // Try deleting
-
+    // find on DB and delete
     const deletedUrl = await Url.findOneAndDelete({ shortCode });
-
+    
+    // check if it exists
     if (!deletedUrl) {
       return res.status(404).json({ message: "URL not found" });
     }
@@ -78,6 +83,8 @@ export const deleteUrl = async (req, res) => {
   }
 };
 
+
+
 // ====================== Redirect to original URL ===============================
 
 export const getOriginalUrl = async (req, res) => {
@@ -87,12 +94,7 @@ export const getOriginalUrl = async (req, res) => {
     // find on DB
     const originalUrl = await Url.findOne({ shortCode });
 
-    // if (originalUrl) {
-    //   res.redirect(originalUrl.longUrl);
-    // } else {
-    //   res.status(404).json({ message: "Invalid shortcode" });
-    // }
-
+    // check if it exists
     if (!originalUrl) {
       return res.status(404).json({ message: "Invalid shortcode" });
     }
